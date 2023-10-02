@@ -1,4 +1,4 @@
-Require Export Complat.
+Require Export AFT.Lattice.Complat.
 
 Set Implicit Arguments.
 Unset Strict Implicit.

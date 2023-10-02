@@ -1,7 +1,6 @@
 (* based on 'approximations, stable operators and the well-founded fixpoint' *)
 
-Require Export ProdBilattice.
-
+Require Export AFT.Lattice.ProdBilattice.
 
 
 Set Implicit Arguments.
@@ -13,9 +12,6 @@ Notation "L ^2" := (prodcompbilat L L)(at level 10).
 
 Definition consistent {T}{L : complat T}(p : L^2) := @le _  L (pr1 p) (pr2 p).
 Definition complete {T}{L : complat T}(p : L^2) :=  (pr1 p) = (pr2 p).
-
-(* Lemma complete_maximalconsistent {T}{L : complat T}(p : L^2) : 
-  complete p -> ∏ q, consistent q ->  *)
 
 
 Definition isOscillating {T}{L : complat T} (f : L -> L) (p : L^2) :=
@@ -619,7 +615,7 @@ Section fixpoint_extreme.
 
   Lemma QA_kjoin :
     QA = eA <+> EA.
-  Proof.
+  Proof. 
     rewrite QA_Qq eA_qq EA_QQ.
     unfold kjoin, join => //=.
     move : (tarski_lfp _ _ (O ∘ O) (antimono_compose_mono O_antimono O_antimono)) => [_ Hl].
@@ -658,8 +654,6 @@ Definition extends {T : hSet} {L : complat T} (A : L^2 -> L^2) (O : L -> L) :=
 Definition extending {T : hSet} {L : complat T} (A : L^2 -> L^2)  :=
   ∏ x, ∑ y, A (x,,x) = y,,y.
 
-Definition trivial {T : hSet} {L : complat T} (O : L -> L) : L^2 -> L^2 :=
-  fun p => O (pr1 p),, O (pr2 p).
 
 Definition exact {T : hSet} {L : complat T} (p : L^2 ) :=
   pr1 p = pr2 p.
@@ -768,107 +762,6 @@ Proof.
 Qed.
 
 
-Lemma symmetric_trivial {T} {L : complat T} (O : L -> L) (Hm : mono O):
-  isSymmetricFunc (trivial O).
-Proof.
-  move => [x y].
-  unfold trivial, swap, fstOf, sndOf, pr1, pr2; auto.
-Qed.
-
-Lemma klemono_trivial {T} {L : complat T} (O : L -> L) (Hm : mono O):
-  klemono (trivial O).
-Proof.
-  suff : (klemono (trivial O) × tlemono (trivial O)). {
-    move => [Hk _]; auto.
-  }
-  apply symmetricFunc_mono; first last.
-  - exists O; split; auto.
-  - apply symmetric_trivial; auto. 
-Qed.
-
-Lemma tlemono_trivial {T} {L : complat T} (O : L -> L) (Hm : mono O):
-  tlemono (trivial O).
-Proof.
-  suff : (klemono (trivial O) × tlemono (trivial O)). {
-    move => [_ Ht]; auto.
-  }
-  apply symmetricFunc_mono; first last.
-  - exists O; split; auto.
-  - apply symmetric_trivial; auto. 
-Qed.
-
-Definition applroximating_trivial {T} (L : complat T) (O : L -> L) (Hm : mono O)
-  : approximating (trivial O) := (symmetric_trivial Hm,, klemono_trivial Hm).
-
-Lemma approximates_trivial {T} (L : complat T) (O : L -> L) (Hm : mono O) :
-  approximates (trivial O) O.
-Proof.
-  repeat split.
-  exact (klemono_trivial Hm).
-Qed. 
-
-Lemma extends_trivial {T} (L : complat T) (O : L -> L) (Hm : mono O) :
-  extends (trivial O) O.
-Proof.
-  unfold extends, trivial => //=.
-Qed.
-
-Lemma exact_trivial {T} (L : complat T) (O : L -> L) (Hm : mono O)  :
-  ∏ p, exact p ->  exact (trivial O p).
-Proof.
-  unfold exact, trivial => /=.
-  move => p ->; auto.
-Qed.  
-
-Lemma trivial_lfp_exact {T} (L : complat T) (O : L -> L) (HO : mono O) :
-  @exact _ L (lfp (trivial O) (klemono_trivial HO)).
-Proof.    
-  (*帰納法を実装しないとできないかも*)
-Abort.  
-
-
-
-
-Lemma trivial_lfp {T} (L : complat T) (O : L -> L) (HO : mono O) :
-  lfp (trivial O) (klemono_trivial HO) = lfp O HO,, lfp O HO.
-Proof.
-  move : (tarski_lfp _ _ _ (klemono_trivial HO)) => [AOfp AOlfp].
-  move : (tarski_lfp _ _ _ HO) => [Ofp Olfp].  
-  move : (approximate_fixpoint (approximates_trivial HO) Ofp) => [H1 H2].  
-  eapply pathscomp0.
-  - symmetry.
-    exact AOfp.
-  - rewrite <- Ofp.
-    unfold trivial.
-    change ((λ p : L ^2, O (pr1 p),, O (pr2 p))) with (trivial O).
-    apply two_arg_paths.
-    all : apply maponpaths.
-    all : apply antisymL; auto.
-    * apply is_inf => b.
-      unfold In => H.
-      unfold image_hsubtype in H.
-      unfold ishinh, ishinh_UU in H.
-      apply H => [[[x1 x2] [Hx1 Hx2]]].
-      simpl in Hx1.
-      unfold trivial, pr1, pr2 in Hx2.
-      simpl in Hx2.
-      apply prod_dest in Hx2.
-      unfold pr1, pr2 in Hx2.
-      induction Hx2 as [Hl Hr].
-      move : (lfp_prefixpoint T L O HO x1 Hl) => Ha.
-      rewrite <- Hx1; auto.
-    * apply is_sup => b.
-      unfold In => H.
-      unfold image_hsubtype in H.
-      unfold ishinh, ishinh_UU in H.
-      apply H => [[[x1 x2] [Hx1 Hx2]]].
-      simpl in Hx1.
-      unfold trivial, pr1, pr2 in Hx2.
-      simpl in Hx2.
-      apply prod_dest in Hx2.
-      unfold pr1, pr2 in Hx2.
-      induction Hx2 as [Hl Hr].
-Abort.     
 
 
 Definition completeStable {T} {L : complat T} (A : L^2 -> L^2) (H : approximating A) :
@@ -1042,8 +935,22 @@ Qed.
 
 Lemma stablefixpoint_approximationfixpoint {T} {L : complat T} (A : L^2 -> L^2) (HA : approximating A) :
   ∏ p, stable HA p = p -> A p = p.
-Proof.
-Admitted.
+Proof.  
+  move => [x y] Hp.
+  unfold stable, completeStable in Hp.
+  apply prod_dest in Hp. simpl in Hp.
+  induction Hp as [H1 H2].
+  move : (tarski_lfp _ _ (λ x : L, fstOf A (x,, y)) (pr1 (pr1 (symmetricFunc_klemono (pr1 HA)) (pr2 HA)) y)) => [Hfp1 _].
+  rewrite H1 in Hfp1.
+  move : (tarski_lfp _ _ (λ x0 : L, fstOf A (x0,, x)) (pr1 (pr1 (symmetricFunc_klemono (pr1 HA)) (pr2 HA)) x)) => [Hfp2 _].
+  rewrite H2 in Hfp2.
+  move : (pr1 HA (y,,x)) => H.
+  unfold swap, pr1, pr2 in H.
+  rewrite H in Hfp2; clear H.
+  unfold fstOf, sndOf in *.
+  replace (A (x,,y)) with (pr1 (A (x,,y)),, pr2 (A (x,,y))) by auto.
+  rewrite Hfp1 Hfp2; auto.
+Qed.
 
 
 Section semantics.
@@ -1077,6 +984,7 @@ Section semantics.
     move => x Hx.
     apply Clfp; auto.
   Qed.
+    
 
   Lemma completebeta_consistentalphe :
     pr1 β = pr2 β -> ∏ x : L^2, stable HA x = x -> consistent x -> β ≺k x -> x ≺k β.
@@ -1097,13 +1005,18 @@ Section semantics.
       apply meet_join.
       apply transL with x1; auto.
   Qed.
-  
 
-
-  Lemma consistentstable_consistentbeta :
-    consistentFunc (stable HA) -> @consistent _ L β.
+  Lemma stable_consistent :
+    consistentFunc (stable HA).
   Proof.
-    move => H.
+    apply approximating_consistent.
+    apply approximating_stable.
+  Qed.    
+  
+  Lemma consistentstable_consistentbeta :
+    @consistent _ L β.
+  Proof.
+    move : stable_consistent => H.
     eapply lfpA_consistent.
     Unshelve.
     - exact (completeStable HA).
@@ -1113,6 +1026,8 @@ Section semantics.
   Qed.
 
 End semantics.
+
+
 
 Lemma completFixpointStable_minimal {T} (L : complat T) (A : L^2 -> L^2) (O : L -> L) (HA : approximates A O) :
   ∏ x, stable (pr1 HA,, pr12 HA) (x,,x) = (x,,x) -> 
@@ -1132,7 +1047,69 @@ Proof.
   induction H0; auto.
 Qed.
 
+
+Section trivial.
+
+Definition trivial {T : hSet} {L : complat T} (O : L -> L) : L^2 -> L^2 :=
+  fun p => O (pr1 p),, O (pr2 p).
+
+
+Lemma symmetric_trivial {T} {L : complat T} (O : L -> L) (Hm : mono O):
+  isSymmetricFunc (trivial O).
+Proof.
+  move => [x y].
+  unfold trivial, swap, fstOf, sndOf, pr1, pr2; auto.
+Qed.
+
+Lemma klemono_trivial {T} {L : complat T} (O : L -> L) (Hm : mono O):
+  klemono (trivial O).
+Proof.
+  suff : (klemono (trivial O) × tlemono (trivial O)). {
+    move => [Hk _]; auto.
+  }
+  apply symmetricFunc_mono; first last.
+  - exists O; split; auto.
+  - apply symmetric_trivial; auto. 
+Qed.
+
+Lemma tlemono_trivial {T} {L : complat T} (O : L -> L) (Hm : mono O):
+  tlemono (trivial O).
+Proof.
+  suff : (klemono (trivial O) × tlemono (trivial O)). {
+    move => [_ Ht]; auto.
+  }
+  apply symmetricFunc_mono; first last.
+  - exists O; split; auto.
+  - apply symmetric_trivial; auto. 
+Qed.
+
+Definition applroximating_trivial {T} (L : complat T) (O : L -> L) (Hm : mono O)
+  : approximating (trivial O) := (symmetric_trivial Hm,, klemono_trivial Hm).
+
+
 Lemma stable_trivial {T} (L : complat T) (O : L -> L) (HO : mono O) :
   ∏ p, stable (applroximating_trivial HO) p = lfp O HO,, lfp O HO.
 Proof.
-Abort.
+  move => [x y].
+  move :  (stable_constant (applroximating_trivial HO) (tlemono_trivial HO)) => H.
+  rewrite (H (x,,y) (x,,x)). clear H.
+  unfold stable, pr1, pr2.
+  suff : completeStable (applroximating_trivial HO) x = lfp O HO.
+  { move => ->. auto. }  
+  apply antisymL.
+  - apply lfp_prefixpoint.
+    unfold trivial, fstOf => /=.
+    rewrite (pr1 (tarski_lfp _ _ O HO)).
+    apply meetI.
+  - apply lfp_prefixpoint.
+    unfold completeStable.
+    move : (tarski_lfp _ _ (λ x0 : L, fstOf (trivial O) (x0,, x))
+    (pr1
+       (pr1 (symmetricFunc_klemono (pr1 (applroximating_trivial HO)))
+          (pr2 (applroximating_trivial HO))) x)) => [Hfp _].
+    unfold trivial, fstOf, pr1, pr2 in Hfp.
+    rewrite Hfp.
+    apply meetI.
+Qed.
+
+End trivial.
