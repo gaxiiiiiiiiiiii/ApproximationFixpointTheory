@@ -1,13 +1,13 @@
 -R . AFT
 
+MISC/Pataraia.v
 Lattice/Lattice.v
 Lattice/Complat.v
 Lattice/Bilattice.v
 Lattice/ProdBilattice.v
 Lattice/Interval.v
-Lattice/All.v
+Lattice/SubsetComplat.v
 AFT/Approximation.v
-Pataraia.v
 AFT/Ultimate.v
 
 -arg -type-in-type

@@ -1,5 +1,5 @@
 
-Require Export AFT.Lattice.Lattice.
+Require Export Lattice.Lattice.
 
 
 Global Notation "a == b" := (eqset a b) (at level 70, no associativity).

@@ -1,6 +1,6 @@
 (* based on 'Bilattices are nace things' *)
 
-Require Export AFT.Lattice.Bilattice.
+Require Export Lattice.Bilattice.
 From UniMath Require Import MoreFoundations.Univalence.
 
 

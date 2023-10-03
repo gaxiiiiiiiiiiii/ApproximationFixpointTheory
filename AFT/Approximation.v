@@ -1,6 +1,6 @@
 (* based on 'approximations, stable operators and the well-founded fixpoint' *)
 
-Require Export AFT.Lattice.ProdBilattice.
+Require Export Lattice.ProdBilattice.
 
 
 Set Implicit Arguments.

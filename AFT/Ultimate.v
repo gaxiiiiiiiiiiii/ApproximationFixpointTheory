@@ -1,6 +1,7 @@
 Require Export AFT.Approximation.
-Require Export AFT.Pataraia.
-Require Export AFT.Lattice.Interval.
+Require Export Lattice.Interval.
+Require Export MISC.Pataraia.
+
 
 Require Import UniMath.MoreFoundations.All.
 Require Import UniMath.OrderTheory.Posets.Basics.
