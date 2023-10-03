@@ -9,5 +9,6 @@ Lattice/Interval.v
 Lattice/SubsetComplat.v
 AFT/Approximation.v
 AFT/Ultimate.v
+KRR/ADF.v
 
 -arg -type-in-type

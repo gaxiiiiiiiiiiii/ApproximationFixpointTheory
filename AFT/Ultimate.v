@@ -3,14 +3,14 @@ Require Export Lattice.Interval.
 Require Export MISC.Pataraia.
 
 
-Require Import UniMath.MoreFoundations.All.
-Require Import UniMath.OrderTheory.Posets.Basics.
-Require Import UniMath.OrderTheory.Posets.MonotoneFunctions.
-Require Import UniMath.OrderTheory.DCPOs.Core.DirectedSets.
-Require Import UniMath.OrderTheory.DCPOs.Core.Basics.
-Require Import UniMath.OrderTheory.DCPOs.Examples.Products.
-Require Import UniMath.OrderTheory.DCPOs.Examples.SubDCPO.
-Require Import UniMath.OrderTheory.DCPOs.FixpointTheorems.Pataraia.
+Require Export UniMath.MoreFoundations.All.
+Require Export UniMath.OrderTheory.Posets.Basics.
+Require Export UniMath.OrderTheory.Posets.MonotoneFunctions.
+Require Export UniMath.OrderTheory.DCPOs.Core.DirectedSets.
+Require Export UniMath.OrderTheory.DCPOs.Core.Basics.
+Require Export UniMath.OrderTheory.DCPOs.Examples.Products.
+Require Export UniMath.OrderTheory.DCPOs.Examples.SubDCPO.
+Require Export UniMath.OrderTheory.DCPOs.FixpointTheorems.Pataraia.
 
 Open Scope dcpo.
 
@@ -1936,3 +1936,4 @@ Proof.
 Qed.
 
 End ultimate.
+
